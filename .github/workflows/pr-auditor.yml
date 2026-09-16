@@ -1,0 +1,23 @@
+name: PR Auditor
+
+# Auditor de PR da org (event-driven): audita o diff (segredo · .env · infra ·
+# diff · config), comenta, cria o check "PR Auditor" e registra em pr_audits.
+# Detecta e REGISTRA — não trava o merge (check não-required, job sempre passa).
+on:
+  pull_request:
+
+permissions:
+  pull-requests: write
+  checks: write
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auditar PR
+        uses: Spark-MAXX/spark-pr-auditor/action@main
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SUPABASE_URL: ${{ secrets.PR_AUDITOR_SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.PR_AUDITOR_SUPABASE_SERVICE_KEY }}
